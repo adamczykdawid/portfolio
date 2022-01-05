@@ -3,14 +3,6 @@
 // prettier-ignore
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const form = document.querySelector('.form');
-const containerWorkouts = document.querySelector('.workouts');
-const inputType = document.querySelector('.form__input--type');
-const inputDistance = document.querySelector('.form__input--distance');
-const inputDuration = document.querySelector('.form__input--duration');
-const inputCadence = document.querySelector('.form__input--cadence');
-const inputElevation = document.querySelector('.form__input--elevation');
-
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
@@ -82,23 +74,50 @@ class Cycling extends Workout {
 
 ///////////////////////////
 //APPLICATION ARCHITECTURE
+
+const form = document.querySelector('.form');
+const containerWorkouts = document.querySelector('.workouts');
+const inputType = document.querySelector('.form__input--type');
+const inputDistance = document.querySelector('.form__input--distance');
+const inputDuration = document.querySelector('.form__input--duration');
+const inputCadence = document.querySelector('.form__input--cadence');
+const inputElevation = document.querySelector('.form__input--elevation');
+const logo = document.querySelector('.logo');
+const parentEdit = document.querySelector('.sidebar');
+
 class App {
   #map;
   #mapZoomLevel = 13;
   #mapEvent;
   #workouts = [];
+
   constructor() {
     //Get users position
-
     //get data from local storage
     this._getLocalStorage();
 
     this._getPosition();
+
     //Attach event handlers
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
+    // const editButton = document.querySelectorAll('.edit__btn');
+    // editButton.forEach(btn => btn.addEventListener('click', this.editWorkout));
+    const parentEdit = document.querySelector('.sidebar');
+    parentEdit.addEventListener(
+      'click',
+      function (e) {
+        let targetElement = e.target;
+        let selector = '.edit__btn';
+        if (targetElement.matches(selector)) {
+          console.log('it is on!!!!');
+        }
+      },
+      true
+    );
   }
+
   _getPosition() {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(
@@ -125,7 +144,6 @@ class App {
     this.#map.on('click', this._showForm.bind(this));
 
     this.#workouts.forEach(work => {
-      this._renderWorkout(work);
       this._renderWorkoutMarker(work);
     });
   }
@@ -151,6 +169,7 @@ class App {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   }
+
   _newWorkout(e) {
     const validInputs = (...inputs) =>
       inputs.every(inp => Number.isFinite(inp));
@@ -187,7 +206,7 @@ class App {
 
       if (
         !validInputs(distance, duration, elevation) ||
-        !allPositive(distance, duration)
+        !allPositive(distance, duration, elevation)
       )
         return alert('Inputs has to be positive numbers!');
 
@@ -206,7 +225,9 @@ class App {
     this._hideForm();
     // Set local storage to all workouts
     this._setLocalStorage();
+    //allow to edit
   }
+
   _renderWorkoutMarker(workout) {
     L.marker(workout.coords)
       .addTo(this.#map)
@@ -228,7 +249,16 @@ class App {
   _renderWorkout(workout) {
     let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
-          <h2 class="workout__title">${workout.description}</h2>
+        <span class="title__edit">
+          <h2 class="workout__title"> 
+          ${workout.description}  
+          </h2>
+          <button class="edit__btn edit__button--${workout.type}">Edit</button>
+          <button class="remove__btn remove__button--${
+            workout.type
+          }">Remove</button></span>
+
+          <span class="workout__details--grid">
           <div class="workout__details">
             <span class="workout__icon">${
               workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'
@@ -256,6 +286,7 @@ class App {
     <span class="workout__value">${workout.cadence}</span>
     <span class="workout__unit">spm</span>
     </div>
+    </span>
     </li>
 `;
 
@@ -293,7 +324,7 @@ class App {
       },
     });
 
-    //using public interface
+    // using public interface
     // workout.click();
   }
 
@@ -312,6 +343,28 @@ class App {
     });
   }
 
+  _removeWorkout() {
+    console.log('imworking');
+    localStorage.removeItem('workouts');
+  }
+
+  // _showElement(e) {
+  //   console.log(this.#workouts.at(-1));
+  //   console.log(e);
+  // }
+
+  // editWorkout(e) {
+  //   if (parentEdit.addEventListener) {
+  //     parentEdit.addEventListener('click', this.handler, false);
+  //   } else if (parent.attachEvent) {
+  //     parent.attachEvent('onclick', this.handler);
+  //   }
+  // }
+
+  // handler(e) {
+  //   if (e.target.className('.edit__btn')) console.log('imhere');
+  // }
+
   reset() {
     localStorage.removeItem('workouts');
     location.reload();
@@ -320,4 +373,7 @@ class App {
 
 const app = new App();
 
-// console.log(firstName);
+// const editButton = document.querySelectorAll('.edit__btn');
+// editButton.forEach(btn =>
+//   btn.addEventListener('click', () => console.log('imhere'))
+// );

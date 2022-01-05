@@ -74,8 +74,20 @@ a:visited {
   cursor: pointer;
 
   display: grid;
+  /* grid-template-columns: 1fr; */
+  /* grid-template-rows: 1fr 1fr; */
+  gap: 0.75rem 0.75rem;
+}
+.workout__details--grid {
+  display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 0.75rem 1.5rem;
+  grid-template-rows: 1fr;
+}
+
+.title__edit {
+  display: flex;
+  justify-content: space-between;
+  /* column-gap: 100px; */
 }
 .workout--running {
   border-left: 5px solid var(--color-brand--2);
@@ -87,7 +99,70 @@ a:visited {
 .workout__title {
   font-size: 1.7rem;
   font-weight: 600;
-  grid-column: 1 / -1;
+  grid-column: 1 / 1;
+  /* box-sizing: content-box; */
+}
+
+.edit__button--cycling {
+  font-size: 1.5rem;
+  padding: 1px 10px;
+  cursor: pointer;
+  background-color: var(--color-brand--1);
+  border-radius: 10px;
+  border: none;
+  text-decoration: none;
+  /* display: inline-block; */
+  /* box-sizing: unset; */
+}
+.edit__button--cycling:hover {
+  background-color: #e2a03c;
+}
+
+.edit__button--running {
+  font-size: 1.5rem;
+  padding: 1px 10px;
+  cursor: pointer;
+  background-color: var(--color-brand--2);
+  border-radius: 10px;
+  border: none;
+  text-decoration: none;
+  /* display: inline-block; */
+  /* box-sizing: unset; */
+}
+.edit__button--running:hover {
+  background-color: #028146;
+}
+
+.remove__button--running {
+  font-size: 1.5rem;
+  padding: 1px 10px;
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  text-decoration: none;
+  /* display: inline-block; */
+  /* box-sizing: unset; */
+}
+.remove__button--running:hover {
+  background-color: rgba(0, 0, 0, 0.493);
+}
+
+.remove__button--cycling {
+  font-size: 1.5rem;
+  padding: 1px 10px;
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
+  border-radius: 10px;
+  border: none;
+  text-decoration: none;
+  /* display: inline-block; */
+  /* box-sizing: unset; */
+}
+.remove__button--cycling:hover {
+  background-color: rgba(0, 0, 0, 0.493);
 }
 
 .workout__details {
