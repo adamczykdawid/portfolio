@@ -666,3 +666,32 @@ TEST DATA: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']. To test, turn of
 
 GOOD LUCK 😀
 */
+
+const testArr = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'];
+const imgContainer = document.querySelector('.images');
+
+const createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement('img');
+    img.src = imgPath;
+
+    img.addEventListener('load', function () {
+      imgContainer.append(img);
+      resolve(img);
+    });
+
+    img.addEventListener('error', function () {
+      reject(new Error('Image not found'));
+    });
+  });
+};
+
+async function loadAll(imgArr) {
+  const imgs = imgArr.map(async pic => await createImage(pic));
+  console.log(imgs);
+  const imgsEl = await Promise.all(imgs);
+  console.log(imgsEl);
+  imgsEl.forEach(img => img.classList.add('parallel'));
+}
+
+loadAll(testArr);
